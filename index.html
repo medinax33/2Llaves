@@ -9,7 +9,6 @@
     <style>
         .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%); }
         .gold-text { background: linear-gradient(135deg, #fde047 0%, #eab308 50%, #ca8a04 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .gold-border { border-color: #eab308; }
         body { background-color: #09090b; color: #f4f4f5; font-family: system-ui, -apple-system, sans-serif; }
     </style>
 </head>
@@ -21,21 +20,18 @@
             <!-- SÍMBOLO MASÓNICO: DOS LLAVES EN SOTIER (TESORERO) -->
             <div class="w-12 h-12 bg-zinc-900 border border-amber-500/60 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                 <svg viewBox="0 0 100 100" class="w-8 h-8 fill-amber-400">
-                    <!-- Llave 1 (Diagonal Izquierda a Derecha) -->
                     <g transform="rotate(-45 50 50)">
                         <circle cx="50" cy="18" r="10" fill="none" stroke="#eab308" stroke-width="6"/>
                         <rect x="47" y="26" width="6" height="52" rx="2"/>
                         <rect x="43" y="62" width="14" height="6" rx="1"/>
                         <rect x="43" y="72" width="10" height="6" rx="1"/>
                     </g>
-                    <!-- Llave 2 (Diagonal Derecha a Izquierda) -->
                     <g transform="rotate(45 50 50)">
                         <circle cx="50" cy="18" r="10" fill="none" stroke="#fde047" stroke-width="6"/>
                         <rect x="47" y="26" width="6" height="52" rx="2"/>
                         <rect x="43" y="62" width="14" height="6" rx="1"/>
                         <rect x="43" y="72" width="10" height="6" rx="1"/>
                     </g>
-                    <!-- Candado Central -->
                     <circle cx="50" cy="50" r="8" fill="#09090b" stroke="#eab308" stroke-width="3"/>
                 </svg>
             </div>
@@ -45,19 +41,19 @@
             </div>
         </div>
 
-        <!-- TASA BCV EN VIVO -->
+        <!-- TASA BCV OFICIAL CON OPCIÓN DE ACTUALIZACIÓN MANUAL -->
         <div class="flex items-center space-x-3 bg-zinc-900 border border-amber-500/40 px-4 py-2 rounded-xl shadow-inner">
             <div class="text-right">
                 <span class="block text-[10px] uppercase font-bold tracking-widest text-amber-400">Tasa BCV Oficial</span>
                 <span id="labelTasaBCV" class="text-lg font-black text-white">Cargando...</span>
             </div>
-            <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                <i class="fa-solid fa-coins animate-pulse"></i>
-            </div>
+            <button onclick="pedirYActualizarTasaManual()" title="Actualizar Tasa BCV Manualmente" class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </button>
         </div>
     </header>
 
-    <!-- NAVEGACIÓN POR BOTONES -->
+    <!-- NAVEGACIÓN -->
     <nav class="bg-zinc-900/80 border-b border-zinc-800 px-4 py-3">
         <div class="max-w-7xl mx-auto flex flex-wrap gap-2 justify-center md:justify-start">
             <button onclick="cambiarSeccion('dashboard')" id="btn-dashboard" class="seccion-btn px-4 py-2.5 rounded-lg font-bold text-sm bg-amber-500 text-black shadow-lg shadow-amber-500/20 transition-all flex items-center space-x-2">
@@ -78,159 +74,87 @@
         </div>
     </nav>
 
-    <!-- CONTENEDOR PRINCIPAL -->
+    <!-- CONTENIDO -->
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
-
         <!-- 1. DASHBOARD -->
         <section id="sec-dashboard" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-                    <div class="absolute right-0 top-0 p-4 text-amber-500/10 text-6xl"><i class="fa-solid fa-box"></i></div>
                     <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Total Artículos en Inventario</p>
                     <h3 id="dash-total-articulos" class="text-3xl font-black text-white mt-2">0</h3>
                     <p class="text-xs text-amber-400 mt-1" id="dash-valor-inventario">$0.00 USD</p>
                 </div>
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-                    <div class="absolute right-0 top-0 p-4 text-emerald-500/10 text-6xl"><i class="fa-solid fa-file-invoice"></i></div>
                     <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Cuentas por Cobrar Pendientes</p>
                     <h3 id="dash-total-cobrar" class="text-3xl font-black text-emerald-400 mt-2">$0.00</h3>
-                    <p class="text-xs text-zinc-400 mt-1" id="dash-cobrar-bs">Bs. 0.00</p>
                 </div>
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-                    <div class="absolute right-0 top-0 p-4 text-rose-500/10 text-6xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
                     <p class="text-xs font-bold uppercase tracking-wider text-zinc-400">Deudas con Proveedores</p>
                     <h3 id="dash-total-deudas" class="text-3xl font-black text-rose-400 mt-2">$0.00</h3>
-                    <p class="text-xs text-zinc-400 mt-1" id="dash-deudas-bs">Bs. 0.00</p>
                 </div>
-            </div>
-
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-                <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-                    <i class="fa-solid fa-chart-line text-amber-400"></i><span>Resumen de Operaciones en la Base de Datos</span>
-                </h3>
-                <p class="text-sm text-zinc-400">Todos los registros se están sincronizando en tiempo real con tu base de datos configurada en Vercel.</p>
             </div>
         </section>
 
         <!-- 2. INVENTARIO -->
         <section id="sec-inventario" class="hidden space-y-6">
-            <div class="flex flex-wrap justify-between items-center gap-4 bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Gestión de Inventario</h2>
-                    <p class="text-xs text-zinc-400">Agregue artículos con su respectiva foto, costos y existencias.</p>
-                </div>
-                <button onclick="abrirModalProducto()" class="gold-gradient text-black font-bold px-5 py-2.5 rounded-xl shadow-lg hover:opacity-95 transition flex items-center space-x-2">
-                    <i class="fa-solid fa-plus"></i><span>Nuevo Artículo</span>
-                </button>
+            <div class="flex justify-between items-center bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+                <h2 class="text-xl font-bold text-white">Gestión de Inventario</h2>
+                <button onclick="abrirModalProducto()" class="gold-gradient text-black font-bold px-5 py-2.5 rounded-xl shadow-lg">Nuevo Artículo</button>
             </div>
-
-            <div id="grid-inventario" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Se inyecta por JS -->
-            </div>
+            <div id="grid-inventario" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
-        <!-- 3. PUNTO DE VENTA (POS) -->
+        <!-- 3. POS -->
         <section id="sec-pos" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-4">
-                <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
-                    <input type="text" id="buscador-pos" placeholder="Buscar producto en inventario..." onkeyup="filtrarProductosPOS()" class="w-full bg-zinc-950 border border-zinc-700 px-4 py-2.5 rounded-xl text-white focus:outline-none focus:border-amber-500">
-                </div>
-                <div id="grid-pos-productos" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto p-1">
-                    <!-- Productos POS -->
-                </div>
+                <input type="text" id="buscador-pos" placeholder="Buscar producto..." onkeyup="renderPOSProductos()" class="w-full bg-zinc-950 border border-zinc-700 px-4 py-2.5 rounded-xl text-white">
+                <div id="grid-pos-productos" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto p-1"></div>
             </div>
-            <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex flex-col justify-between shadow-xl">
+            <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl flex flex-col justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-white mb-4 border-b border-zinc-800 pb-2 flex items-center space-x-2">
-                        <i class="fa-solid fa-cart-shopping text-amber-400"></i><span>Carrito de Venta</span>
-                    </h3>
-                    <div id="lista-carrito" class="space-y-3 max-h-60 overflow-y-auto mb-4">
-                        <p class="text-zinc-500 text-sm text-center py-6">El carrito está vacío</p>
-                    </div>
+                    <h3 class="text-lg font-bold text-white mb-4 border-b border-zinc-800 pb-2">Carrito de Venta</h3>
+                    <div id="lista-carrito" class="space-y-3 max-h-60 overflow-y-auto mb-4"></div>
                 </div>
                 <div class="border-t border-zinc-800 pt-4 space-y-3">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-zinc-400">Total USD:</span>
-                        <span id="carrito-total-usd" class="font-bold text-white">$0.00</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-zinc-400">Total Bs (BCV):</span>
-                        <span id="carrito-total-bs" class="font-bold text-amber-400">Bs. 0.00</span>
-                    </div>
-                    <div class="space-y-2 pt-2">
-                        <select id="tipo-pago-pos" class="w-full bg-zinc-950 border border-zinc-700 p-2.5 rounded-xl text-white text-sm">
-                            <option value="CONTADO">Pago de Contado / Efectivo / Pago Móvil</option>
-                            <option value="FIADO">Crédito / Cuenta por Cobrar (Fiado)</option>
-                        </select>
-                        <input type="text" id="cliente-pos-nombre" placeholder="Nombre del Cliente" class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm hidden">
-                    </div>
-                    <button onclick="procesarVenta()" class="w-full gold-gradient text-black font-black py-3 rounded-xl shadow-lg hover:opacity-95 transition uppercase tracking-wider">
-                        Procesar Venta
-                    </button>
+                    <div class="flex justify-between text-sm"><span class="text-zinc-400">Total USD:</span><span id="carrito-total-usd" class="font-bold text-white">$0.00</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-zinc-400">Total Bs (BCV):</span><span id="carrito-total-bs" class="font-bold text-amber-400">Bs. 0.00</span></div>
+                    <select id="tipo-pago-pos" class="w-full bg-zinc-950 border border-zinc-700 p-2.5 rounded-xl text-white text-sm">
+                        <option value="CONTADO">Pago de Contado / Efectivo</option>
+                        <option value="FIADO">Crédito / Cuenta por Cobrar</option>
+                    </select>
+                    <input type="text" id="cliente-pos-nombre" placeholder="Nombre del Cliente" class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm hidden">
+                    <button onclick="procesarVenta()" class="w-full gold-gradient text-black font-black py-3 rounded-xl uppercase">Procesar Venta</button>
                 </div>
             </div>
         </section>
 
-        <!-- 4. CUENTAS POR PAGAR (PROVEEDORES) -->
+        <!-- 4. DEUDAS -->
         <section id="sec-deudas" class="hidden space-y-6">
             <div class="flex justify-between items-center bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Deudas por Pagar a Proveedores</h2>
-                    <p class="text-xs text-zinc-400">Control de compromisos comerciales y facturas pendientes.</p>
-                </div>
-                <button onclick="abrirModalTransaccion('DEUDA')" class="gold-gradient text-black font-bold px-4 py-2.5 rounded-xl shadow-lg">
-                    <i class="fa-solid fa-plus"></i> Registrar Deuda
-                </button>
+                <h2 class="text-xl font-bold text-white">Deudas con Proveedores</h2>
+                <button onclick="abrirModalTransaccion('DEUDA')" class="gold-gradient text-black font-bold px-4 py-2.5 rounded-xl">Registrar Deuda</button>
             </div>
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-zinc-950 text-zinc-400 text-xs uppercase border-b border-zinc-800">
-                        <tr>
-                            <th class="p-4">Proveedor</th>
-                            <th class="p-4">Concepto / Detalles</th>
-                            <th class="p-4">Monto ($)</th>
-                            <th class="p-4">Monto (Bs)</th>
-                            <th class="p-4">Estatus</th>
-                            <th class="p-4 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-deudas" class="divide-y divide-zinc-800 text-sm">
-                        <!-- Deudas -->
-                    </tbody>
-                </table>
-            </div>
+            <table class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden text-left">
+                <thead class="bg-zinc-950 text-zinc-400 text-xs uppercase border-b border-zinc-800">
+                    <tr><th class="p-4">Proveedor</th><th class="p-4">Detalles</th><th class="p-4">Monto ($)</th><th class="p-4">Monto (Bs)</th><th class="p-4">Estatus</th><th class="p-4">Acción</th></tr>
+                </thead>
+                <tbody id="tabla-deudas" class="divide-y divide-zinc-800 text-sm"></tbody>
+            </table>
         </section>
 
-        <!-- 5. COBRANZA CLIENTES -->
+        <!-- 5. COBRANZAS -->
         <section id="sec-cobranzas" class="hidden space-y-6">
             <div class="flex justify-between items-center bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
-                <div>
-                    <h2 class="text-xl font-bold text-white">Cobranza a Clientes</h2>
-                    <p class="text-xs text-zinc-400">Cuentas pendientes por cobrar y créditos otorgados.</p>
-                </div>
-                <button onclick="abrirModalTransaccion('COBRANZA')" class="gold-gradient text-black font-bold px-4 py-2.5 rounded-xl shadow-lg">
-                    <i class="fa-solid fa-plus"></i> Registrar Crédito
-                </button>
+                <h2 class="text-xl font-bold text-white">Cobranza a Clientes</h2>
+                <button onclick="abrirModalTransaccion('COBRANZA')" class="gold-gradient text-black font-bold px-4 py-2.5 rounded-xl">Registrar Crédito</button>
             </div>
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-zinc-950 text-zinc-400 text-xs uppercase border-b border-zinc-800">
-                        <tr>
-                            <th class="p-4">Cliente</th>
-                            <th class="p-4">Detalles</th>
-                            <th class="p-4">Monto ($)</th>
-                            <th class="p-4">Monto (Bs)</th>
-                            <th class="p-4">Estatus</th>
-                            <th class="p-4 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-cobranzas" class="divide-y divide-zinc-800 text-sm">
-                        <!-- Cobranzas -->
-                    </tbody>
-                </table>
-            </div>
+            <table class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden text-left">
+                <thead class="bg-zinc-950 text-zinc-400 text-xs uppercase border-b border-zinc-800">
+                    <tr><th class="p-4">Cliente</th><th class="p-4">Detalles</th><th class="p-4">Monto ($)</th><th class="p-4">Monto (Bs)</th><th class="p-4">Estatus</th><th class="p-4">Acción</th></tr>
+                </thead>
+                <tbody id="tabla-cobranzas" class="divide-y divide-zinc-800 text-sm"></tbody>
+            </table>
         </section>
-
     </main>
 
     <!-- FOOTER SOLICITADO -->
@@ -239,80 +163,70 @@
     </footer>
 
     <!-- MODAL PRODUCTO -->
-    <div id="modal-producto" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                <i class="fa-solid fa-box-archive text-amber-400"></i><span>Agregar Artículo al Inventario</span>
-            </h3>
+    <div id="modal-producto" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <h3 class="text-lg font-bold text-white">Nuevo Artículo</h3>
             <form id="form-producto" onsubmit="guardarProducto(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs text-zinc-400 font-bold mb-1">Nombre del Artículo</label>
-                    <input type="text" id="prod-nombre" required class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm">
+                <input type="text" id="prod-nombre" placeholder="Nombre" required class="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-xl text-white text-sm">
+                <input type="text" id="prod-categoria" placeholder="Categoría" required class="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-xl text-white text-sm">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="number" id="prod-stock" placeholder="Stock" required class="bg-zinc-950 border border-zinc-700 p-2 rounded-xl text-white text-sm">
+                    <input type="number" step="0.01" id="prod-costo" placeholder="Costo $" required class="bg-zinc-950 border border-zinc-700 p-2 rounded-xl text-white text-sm">
+                    <input type="number" step="0.01" id="prod-precio" placeholder="Precio $" required class="bg-zinc-950 border border-zinc-700 p-2 rounded-xl text-white text-sm">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs text-zinc-400 font-bold mb-1">Categoría</label>
-                        <input type="text" id="prod-categoria" required class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-zinc-400 font-bold mb-1">Stock Inicial</label>
-                        <input type="number" id="prod-stock" required class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs text-zinc-400 font-bold mb-1">Costo ($)</label>
-                        <input type="number" step="0.01" id="prod-costo" required class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-zinc-400 font-bold mb-1">Precio Venta ($)</label>
-                        <input type="number" step="0.01" id="prod-precio" required class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 font-bold mb-1">Foto (URL o Imagen)</label>
-                    <input type="text" id="prod-foto" placeholder="https://..." class="w-full bg-zinc-950 border border-zinc-700 px-3 py-2 rounded-xl text-white text-sm mb-2">
-                    <input type="file" id="prod-archivo-foto" accept="image/*" class="w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
-                </div>
-                <div class="flex justify-end space-x-2 pt-3">
-                    <button type="button" onclick="cerrarModalProducto()" class="px-4 py-2 rounded-xl text-sm bg-zinc-800 text-zinc-300 font-bold">Cancelar</button>
+                <input type="text" id="prod-foto" placeholder="URL de Foto (Opcional)" class="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-xl text-white text-sm">
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="cerrarModalProducto()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-xl text-sm font-bold">Cancelar</button>
                     <button type="submit" class="gold-gradient text-black font-bold px-5 py-2 rounded-xl text-sm">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- SCRIPT DE CONEXIÓN Y FUNCIONALIDAD -->
+    <!-- SCRIPT -->
     <script>
-        let TASA_BCV = 36.50; // Respaldo inicial
+        let TASA_BCV = 36.50;
         let productosCache = [];
         let carrito = [];
 
-        // Cargar Tasa BCV Oficial
         async function cargarTasaBCV() {
             try {
-                const res = await fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar/pit');
+                const res = await fetch('/api/tasa');
                 const data = await res.json();
-                if (data && data.monitors && data.monitors.bcv) {
-                    TASA_BCV = data.monitors.bcv.price;
-                }
-            } catch (e) {
-                console.log("Usando tasa por defecto");
-            }
+                if(data && data.tasa) TASA_BCV = data.tasa;
+            } catch(e) { console.error(e); }
             document.getElementById('labelTasaBCV').innerText = `Bs. ${TASA_BCV.toFixed(2)}`;
             actualizarTodo();
         }
 
-        function cambiarSeccion(seccionId) {
+        async function pedirYActualizarTasaManual() {
+            let nuevaTasa = prompt("Ingrese la Tasa BCV Oficial actual (según www.bcv.org.ve):", TASA_BCV);
+            if(!nuevaTasa) return;
+            let parsed = parseFloat(nuevaTasa);
+            if(isNaN(parsed) || parsed <= 0) return alert('Tasa inválida');
+
+            try {
+                await fetch('/api/tasa', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tasa: parsed })
+                });
+                TASA_BCV = parsed;
+                document.getElementById('labelTasaBCV').innerText = `Bs. ${TASA_BCV.toFixed(2)}`;
+                actualizarTodo();
+                alert('¡Tasa BCV actualizada correctamente en el sistema!');
+            } catch(e) {
+                alert('Error al guardar la tasa en la base de datos');
+            }
+        }
+
+        function cambiarSeccion(id) {
             ['dashboard', 'inventario', 'pos', 'deudas', 'cobranzas'].forEach(s => {
                 document.getElementById(`sec-${s}`).classList.add('hidden');
                 document.getElementById(`btn-${s}`).className = "seccion-btn px-4 py-2.5 rounded-lg font-bold text-sm bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-all flex items-center space-x-2";
             });
-            document.getElementById(`sec-${seccionId}`).classList.remove('hidden');
-            document.getElementById(`btn-${seccionId}`).className = "seccion-btn px-4 py-2.5 rounded-lg font-bold text-sm bg-amber-500 text-black shadow-lg shadow-amber-500/20 transition-all flex items-center space-x-2";
-            
-            if(seccionId === 'deudas') cargarDeudas();
-            if(seccionId === 'cobranzas') cargarCobranzas();
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+            document.getElementById(`btn-${id}`).className = "seccion-btn px-4 py-2.5 rounded-lg font-bold text-sm bg-amber-500 text-black shadow-lg shadow-amber-500/20 transition-all flex items-center space-x-2";
         }
 
         async function actualizarTodo() {
@@ -321,7 +235,6 @@
             await cargarCobranzas();
         }
 
-        // --- INVENTARIO API ---
         async function cargarInventario() {
             try {
                 const res = await fetch('/api/productos');
@@ -329,17 +242,16 @@
                 renderInventario();
                 renderPOSProductos();
                 actualizarDashboard();
-            } catch (e) { console.error(e); }
+            } catch(e) {}
         }
 
         function renderInventario() {
             const grid = document.getElementById('grid-inventario');
             grid.innerHTML = '';
             productosCache.forEach(p => {
-                const fotoSrc = p.foto || 'https://via.placeholder.com/150?text=Sin+Foto';
                 grid.innerHTML += `
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex space-x-4 items-center shadow-lg">
-                        <img src="${fotoSrc}" class="w-20 h-20 object-cover rounded-xl border border-zinc-700">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex space-x-4 items-center">
+                        <img src="${p.foto || 'https://via.placeholder.com/150'}" class="w-20 h-20 object-cover rounded-xl border border-zinc-700">
                         <div class="flex-grow">
                             <span class="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded font-bold uppercase">${p.categoria}</span>
                             <h4 class="font-bold text-white text-base mt-1">${p.nombre}</h4>
@@ -359,52 +271,31 @@
 
         async function guardarProducto(e) {
             e.preventDefault();
-            const archivoInput = document.getElementById('prod-archivo-foto');
-            let foto = document.getElementById('prod-foto').value;
-
-            if (archivoInput.files && archivoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async function(uploadEvent) {
-                    await enviarProductoDB(uploadEvent.target.result);
-                };
-                reader.readAsDataURL(archivoInput.files[0]);
-            } else {
-                await enviarProductoDB(foto || 'https://via.placeholder.com/150?text=Sin+Foto');
-            }
-        }
-
-        async function enviarProductoDB(fotoUrl) {
-            const nuevoProd = {
+            const nuevo = {
                 nombre: document.getElementById('prod-nombre').value,
                 categoria: document.getElementById('prod-categoria').value,
                 stock: parseInt(document.getElementById('prod-stock').value),
                 costo: parseFloat(document.getElementById('prod-costo').value),
                 precio: parseFloat(document.getElementById('prod-precio').value),
-                foto: fotoUrl
+                foto: document.getElementById('prod-foto').value || 'https://via.placeholder.com/150'
             };
-
-            await fetch('/api/productos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nuevoProd)
-            });
-
+            await fetch('/api/productos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(nuevo) });
             cerrarModalProducto();
             cargarInventario();
         }
 
         async function eliminarProducto(id) {
-            if(confirm('¿Eliminar este producto?')) {
+            if(confirm('¿Eliminar producto?')) {
                 await fetch(`/api/productos/${id}`, { method: 'DELETE' });
                 cargarInventario();
             }
         }
 
-        // --- PUNTO DE VENTA (POS) ---
         function renderPOSProductos() {
+            const filtro = document.getElementById('buscador-pos').value.toLowerCase();
             const grid = document.getElementById('grid-pos-productos');
             grid.innerHTML = '';
-            productosCache.forEach(p => {
+            productosCache.filter(p => p.nombre.toLowerCase().includes(filtro)).forEach(p => {
                 grid.innerHTML += `
                     <div onclick="agregarAlCarrito(${p.id})" class="bg-zinc-950 border border-zinc-800 p-3 rounded-xl cursor-pointer hover:border-amber-500 transition">
                         <img src="${p.foto || 'https://via.placeholder.com/150'}" class="w-full h-24 object-cover rounded-lg mb-2">
@@ -417,13 +308,10 @@
 
         function agregarAlCarrito(id) {
             const p = productosCache.find(x => x.id === id);
-            if(!p || p.stock <= 0) return alert('Producto sin stock disponible');
+            if(!p || p.stock <= 0) return alert('Sin stock');
             let item = carrito.find(x => x.id === id);
-            if(item) {
-                if(item.cantidad < p.stock) item.cantidad++;
-            } else {
-                carrito.push({ ...p, cantidad: 1 });
-            }
+            if(item) { if(item.cantidad < p.stock) item.cantidad++; }
+            else { carrito.push({ ...p, cantidad: 1 }); }
             renderCarrito();
         }
 
@@ -457,33 +345,24 @@
         });
 
         async function procesarVenta() {
-            if(carrito.length === 0) return alert('El carrito está vacío');
+            if(carrito.length === 0) return alert('Carrito vacío');
             const tipoPago = document.getElementById('tipo-pago-pos').value;
             const cliente = document.getElementById('cliente-pos-nombre').value || 'Cliente General';
             let totalUsd = carrito.reduce((acc, i) => acc + (i.precio * i.cantidad), 0);
             let detallesText = carrito.map(i => `${i.cantidad}x ${i.nombre}`).join(', ');
 
-            if(tipoPago === 'FIADO') {
-                await fetch('/api/transacciones', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tipo: 'COBRANZA', tercero: cliente, detalles: detallesText, monto_usd: totalUsd, estado: 'PENDIENTE' })
-                });
-            } else {
-                await fetch('/api/transacciones', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tipo: 'VENTA', tercero: cliente, detalles: detallesText, monto_usd: totalUsd, estado: 'PAGADO' })
-                });
-            }
+            await fetch('/api/transacciones', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: tipoPago === 'FIADO' ? 'COBRANZA' : 'VENTA', tercero: cliente, detalles: detallesText, monto_usd: totalUsd, estado: tipoPago === 'FIADO' ? 'PENDIENTE' : 'PAGADO' })
+            });
 
             carrito = [];
             renderCarrito();
-            alert('¡Venta procesada y guardada en la base de datos con éxito!');
+            alert('¡Venta registrada con éxito!');
             actualizarTodo();
         }
 
-        // --- DEUDAS Y COBRANZAS ---
         async function cargarDeudas() {
             const res = await fetch('/api/transacciones?tipo=DEUDA');
             const data = await res.json();
@@ -497,9 +376,7 @@
                         <td class="p-4 text-white font-bold">$${parseFloat(d.monto_usd).toFixed(2)}</td>
                         <td class="p-4 text-amber-400">Bs. ${(d.monto_usd * TASA_BCV).toFixed(2)}</td>
                         <td class="p-4"><span class="px-2 py-1 rounded text-xs ${d.estado === 'PAGADO' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'} font-bold">${d.estado}</span></td>
-                        <td class="p-4 text-center">
-                            ${d.estado === 'PENDIENTE' ? `<button onclick="cambiarEstadoTransaccion(${d.id}, 'PAGADO')" class="bg-emerald-600 text-white px-3 py-1 rounded text-xs font-bold">Marcar Pagado</button>` : 'Saldado'}
-                        </td>
+                        <td class="p-4">${d.estado === 'PENDIENTE' ? `<button onclick="cambiarEstadoTransaccion(${d.id}, 'PAGADO')" class="bg-emerald-600 text-white px-3 py-1 rounded text-xs font-bold">Pagar</button>` : 'Saldado'}</td>
                     </tr>
                 `;
             });
@@ -518,9 +395,7 @@
                         <td class="p-4 text-white font-bold">$${parseFloat(c.monto_usd).toFixed(2)}</td>
                         <td class="p-4 text-amber-400">Bs. ${(c.monto_usd * TASA_BCV).toFixed(2)}</td>
                         <td class="p-4"><span class="px-2 py-1 rounded text-xs ${c.estado === 'PAGADO' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'} font-bold">${c.estado}</span></td>
-                        <td class="p-4 text-center">
-                            ${c.estado === 'PENDIENTE' ? `<button onclick="cambiarEstadoTransaccion(${c.id}, 'PAGADO')" class="bg-emerald-600 text-white px-3 py-1 rounded text-xs font-bold">Registrar Cobro</button>` : 'Cobrado'}
-                        </td>
+                        <td class="p-4">${c.estado === 'PENDIENTE' ? `<button onclick="cambiarEstadoTransaccion(${c.id}, 'PAGADO')" class="bg-emerald-600 text-white px-3 py-1 rounded text-xs font-bold">Cobrar</button>` : 'Cobrado'}</td>
                     </tr>
                 `;
             });
@@ -529,9 +404,9 @@
         async function abrirModalTransaccion(tipo) {
             const tercero = prompt(`Nombre del ${tipo === 'DEUDA' ? 'Proveedor' : 'Cliente'}:`);
             if(!tercero) return;
-            const detalles = prompt("Concepto o detalles de la cuenta:") || 'General';
+            const detalles = prompt("Concepto:") || 'General';
             const monto = parseFloat(prompt("Monto en Dólares ($):") || '0');
-            if(monto <= 0) return alert('Monto inválido');
+            if(monto <= 0) return;
 
             await fetch('/api/transacciones', {
                 method: 'POST',
@@ -556,10 +431,7 @@
             document.getElementById('dash-valor-inventario').innerText = `$${valorInv.toFixed(2)} USD`;
         }
 
-        // Inicializar aplicación
-        window.onload = () => {
-            cargarTasaBCV();
-        };
+        window.onload = () => { cargarTasaBCV(); };
     </script>
 </body>
 </html>
