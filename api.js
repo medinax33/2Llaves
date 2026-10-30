@@ -4,6 +4,7 @@ const app = express();
 
 app.use(express.json({ limit: '10mb' }));
 
+// Inicializar tablas automáticamente al arrancar el servidor en Vercel
 async function initDB() {
     try {
         await sql`CREATE TABLE IF NOT EXISTS productos (
@@ -18,21 +19,21 @@ async function initDB() {
 
         await sql`CREATE TABLE IF NOT EXISTS transacciones (
             id SERIAL PRIMARY KEY,
-            tipo VARCHAR(50) NOT NULL, -- 'VENTA', 'DEUDA', 'COBRANZA'
+            tipo VARCHAR(50) NOT NULL,
             tercero VARCHAR(255),
             detalles TEXT,
             monto_usd NUMERIC(10, 2) NOT NULL,
             estado VARCHAR(50) DEFAULT 'PENDIENTE',
             fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`;
-        console.log("Base de datos inicializada correctamente");
+        console.log("Tablas creadas y conectadas con éxito a Vercel Postgres");
     } catch (error) {
-        console.error("Error al inicializar la base de datos:", error);
+        console.error("Error al conectar con la base de datos de Vercel:", error);
     }
 }
 initDB();
 
-// --- RUTAS DE PRODUCTOS ---
+// --- ENDPOINTS ---
 app.get('/api/productos', async (req, res) => {
     try {
         const { rows } = await sql`SELECT * FROM productos ORDER BY id DESC;`;
@@ -66,7 +67,6 @@ app.delete('/api/productos/:id', async (req, res) => {
     }
 });
 
-// --- RUTAS DE TRANSACCIONES ---
 app.get('/api/transacciones', async (req, res) => {
     try {
         const { tipo } = req.query;
