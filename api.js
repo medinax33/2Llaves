@@ -4,7 +4,7 @@ const app = express();
 
 app.use(express.json({ limit: '10mb' }));
 
-// Inicializar tablas automáticamente al arrancar el servidor en Vercel
+// Función para inicializar tablas automáticamente
 async function initDB() {
     try {
         await sql`CREATE TABLE IF NOT EXISTS productos (
@@ -26,19 +26,20 @@ async function initDB() {
             estado VARCHAR(50) DEFAULT 'PENDIENTE',
             fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`;
-        console.log("Tablas creadas y conectadas con éxito a Vercel Postgres");
+        console.log("Tablas verificadas/creadas correctamente en Vercel Postgres.");
     } catch (error) {
-        console.error("Error al conectar con la base de datos de Vercel:", error);
+        console.error("Error al inicializar la base de datos:", error);
     }
 }
 initDB();
 
-// --- ENDPOINTS ---
+// --- PRODUCTOS ---
 app.get('/api/productos', async (req, res) => {
     try {
         const { rows } = await sql`SELECT * FROM productos ORDER BY id DESC;`;
         res.json(rows);
     } catch (error) {
+        console.error("Error GET /api/productos:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -53,6 +54,7 @@ app.post('/api/productos', async (req, res) => {
         `;
         res.json({ success: true, producto: result.rows[0] });
     } catch (error) {
+        console.error("Error POST /api/productos:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -63,10 +65,12 @@ app.delete('/api/productos/:id', async (req, res) => {
         await sql`DELETE FROM productos WHERE id = ${id};`;
         res.json({ success: true });
     } catch (error) {
+        console.error("Error DELETE /api/productos:", error);
         res.status(500).json({ error: error.message });
     }
 });
 
+// --- TRANSACCIONES (Ventas, Deudas, Cobranzas) ---
 app.get('/api/transacciones', async (req, res) => {
     try {
         const { tipo } = req.query;
@@ -78,6 +82,7 @@ app.get('/api/transacciones', async (req, res) => {
         }
         res.json(rows.rows || rows);
     } catch (error) {
+        console.error("Error GET /api/transacciones:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -92,6 +97,7 @@ app.post('/api/transacciones', async (req, res) => {
         `;
         res.json({ success: true, transaccion: result.rows[0] });
     } catch (error) {
+        console.error("Error POST /api/transacciones:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -103,6 +109,7 @@ app.put('/api/transacciones/:id', async (req, res) => {
         await sql`UPDATE transacciones SET estado = ${estado} WHERE id = ${id};`;
         res.json({ success: true });
     } catch (error) {
+        console.error("Error PUT /api/transacciones:", error);
         res.status(500).json({ error: error.message });
     }
 });
